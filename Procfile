@@ -1,1 +1,1 @@
-web: gunicorn UniqueAccentBizPageAPI.wsgi
+web: gunicorn UniqueAccentApi.wsgi
