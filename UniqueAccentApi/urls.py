@@ -17,7 +17,10 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path, include
 
+from UniqueAccentApi.views import home
+
 urlpatterns = [
+    path('', home),
     path('auth/', include('authentication.urls')),
     path('account/', include('accounts.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
