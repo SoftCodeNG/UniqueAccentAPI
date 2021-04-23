@@ -22,5 +22,6 @@ from UniqueAccentApi.views import home
 urlpatterns = [
     path('', home),
     path('auth/', include('authentication.urls')),
-    path('account/', include('accounts.urls')),
+    path('accounts/', include('accounts.urls')),
+    path('courses/', include('courses.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
