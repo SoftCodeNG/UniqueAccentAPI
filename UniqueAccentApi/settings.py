@@ -60,7 +60,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:4200', 'https://localhost:4200'
+    'http://localhost:4200', 'https://uniqueaccent.com.ng'
 )
 
 ROOT_URLCONF = 'UniqueAccentApi.urls'

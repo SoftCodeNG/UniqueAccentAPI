@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from courses.models import Courses
+from courses.models import Courses, Lessons
 
 
 class CreateCourseSerializer(ModelSerializer):
@@ -15,4 +15,24 @@ class CreateCourseSerializer(ModelSerializer):
 
     class Meta:
         model = Courses
+        fields = '__all__'
+
+
+class GetCoursesSerializer(ModelSerializer):
+    class Meta:
+        model = Courses
+        fields = '__all__'
+
+
+class CreateLessonSerializer(ModelSerializer):
+    # courseId = serializers.RelatedField(source='Courses', read_only=True)
+    title = serializers.CharField(required=True)
+    slug = serializers.CharField(required=False)
+    description = serializers.CharField(required=False)
+    duration = serializers.IntegerField(required=True)
+    thumbnail = serializers.CharField(required=True)
+    video = serializers.CharField(required=True)
+
+    class Meta:
+        model = Lessons
         fields = '__all__'

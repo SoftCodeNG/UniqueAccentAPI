@@ -16,6 +16,8 @@ class Courses(models.Model):
     purchases = models.IntegerField(default=0, null=False)
     lessons = models.IntegerField(default=0, null=False)
     isPublished = models.BooleanField(default=False, null=False)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -25,4 +27,27 @@ class Courses(models.Model):
             else:
                 self.slug = slugify(self.title)
         super(Courses, self).save(*args, **kwargs)
+
+
+class Lessons(models.Model):
+    courseId = models.ForeignKey(Courses, on_delete=models.CASCADE, related_name='+')
+    title = models.CharField(max_length=100, blank=False, null=False)
+    slug = models.SlugField(max_length=100, unique=True, blank=False, null=False)
+    description = models.TextField(blank=False, null=False)
+    duration = models.IntegerField(default=0, null=False)
+    thumbnail = models.CharField(max_length=500, null=False)
+    video = models.CharField(max_length=500, null=False)
+    views = models.IntegerField(default=0, null=False)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            # Newly created object, so set slug
+            if Courses.objects.filter(slug=slugify(self.title)).exists():
+                self.slug = slugify(self.title) + str(datetime.now().timestamp())
+            else:
+                self.slug = slugify(self.title)
+        print('QQQQQQQQQQQQQQQQQQQQQEQ', self)
+        super(Lessons, self).save(*args, **kwargs)
 
