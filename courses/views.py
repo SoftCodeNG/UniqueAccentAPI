@@ -7,8 +7,8 @@ from services.checkToken import authenticateToken, isAdmin
 
 
 @api_view(['POST'])
-@authenticateToken
-@isAdmin
+# @authenticateToken
+# @isAdmin
 def create_course(request):
     serializer = CreateCourseSerializer(data=request.data)
     if serializer.is_valid():
