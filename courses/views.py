@@ -1,8 +1,9 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from courses.models import Courses
-from courses.serializer import CreateCourseSerializer, CreateLessonSerializer, GetCoursesSerializer
+from courses.models import Courses, Lessons
+from courses.serializer import CreateCourseSerializer, CreateLessonSerializer, GetCoursesSerializer, \
+    GetLessonsSerializer
 from services.checkToken import authenticateToken, isAdmin
 
 
@@ -54,4 +55,15 @@ def create_lesson(request):
         'code': Response.status_code,
         'errors': serializer.errors,
         'payload': serializer.data if len(serializer.errors) == 0 else None
+    })
+
+
+@api_view(['GET'])
+def get_lessons_by_id(request, course_id):
+    lessons = Lessons.objects.filter(courseId=course_id)
+    serializer = GetLessonsSerializer(lessons, many=True)
+    return Response({
+        'code': Response.status_code,
+        'description': 'All lessons for a course',
+        'payload': serializer.data
     })

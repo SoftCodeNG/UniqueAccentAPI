@@ -25,7 +25,6 @@ class GetCoursesSerializer(ModelSerializer):
 
 
 class CreateLessonSerializer(ModelSerializer):
-    # courseId = serializers.RelatedField(source='Courses', read_only=True)
     title = serializers.CharField(required=True)
     slug = serializers.CharField(required=False)
     description = serializers.CharField(required=False)
@@ -33,6 +32,12 @@ class CreateLessonSerializer(ModelSerializer):
     thumbnail = serializers.CharField(required=True)
     video = serializers.CharField(required=True)
 
+    class Meta:
+        model = Lessons
+        fields = '__all__'
+
+
+class GetLessonsSerializer(ModelSerializer):
     class Meta:
         model = Lessons
         fields = '__all__'
