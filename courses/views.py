@@ -67,3 +67,14 @@ def get_lessons_by_id(request, course_id):
         'description': 'All lessons for a course',
         'payload': serializer.data
     })
+
+
+@api_view(['GET'])
+def get_lesson_detail(request, slug):
+    lesson = Lessons.objects.get(slug=slug)
+    serializer = GetLessonsSerializer(lesson, many=False)
+    return Response({
+        'code': Response.status_code,
+        'description': 'Lesson detail',
+        'payload': serializer.data
+    })
