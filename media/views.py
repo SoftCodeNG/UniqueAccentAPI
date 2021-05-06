@@ -82,6 +82,19 @@ def get_all_videos(request):
 
 
 @api_view(['GET'])
+# @authenticateToken
+def get_all_audio(request):
+    media = Media.objects.filter(fileType__exact='audio')
+    serializer = GetUserMediaSerializer(media, many=True)
+
+    return Response({
+        'code': Response.status_code,
+        'description': 'All Audio',
+        'payload': serializer.data
+    })
+
+
+@api_view(['GET'])
 @authenticateToken
 def get_single_media(request, jwtDecode, pk):
     media = Media.objects.filter(user_id__exact=jwtDecode['user_id']).get(id=pk)
