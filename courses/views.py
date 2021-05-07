@@ -33,7 +33,7 @@ def get_courses(request):
 
 
 @api_view(['GET'])
-def get_courses_detail(request, slug):
+def get_course_details(request, slug):
     course = Courses.objects.get(slug=slug)
     serializer = GetCoursesSerializer(course, many=False)
     return Response({
