@@ -1,4 +1,4 @@
-from django.urls import path
+﻿from django.urls import path
 
 from courses.views import create_course, get_courses, get_course_details, create_lesson, get_lessons_by_id, \
     get_lesson_detail
