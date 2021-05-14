@@ -17,7 +17,7 @@ from dotenv import dotenv_values
 env = dotenv_values(".env")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -29,7 +29,7 @@ SECRET_KEY = env['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env['DEBUG']
 
-ALLOWED_HOSTS = ['unique-accent-api.herokuapp.com', env['ALLOWED_HOSTS']]
+ALLOWED_HOSTS = ['unique-accent-api.herokuapp.com', 'localhost:4200', env['ALLOWED_HOSTS']]
 
 
 # Application definition
@@ -147,7 +147,7 @@ STATIC_URL = '/static/rest_framework/'
 
 # Media Root
 MEDIA_ROOT = os.path.join(BASE_DIR, 'UploadedMediaFiles')
-MEDIA_URL = 'get-media/'
+MEDIA_URL = '/get-media/'
 
 # SimpleJWT Configuration
 SIMPLE_JWT = {
