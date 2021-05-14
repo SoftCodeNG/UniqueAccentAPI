@@ -1,9 +1,10 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from courses.models import Courses, Lessons
+from courses.models import Courses, Lessons, Comments
 from courses.serializer import CreateCourseSerializer, CreateLessonSerializer, GetCoursesSerializer, \
-    GetLessonsSerializer
+    GetLessonsSerializer, PostCommentSerializer, GetCommentSerializer, ReplyCommentSerializer
+from accounts.models import UserAccount
 from services.checkToken import authenticateToken, isAdmin
 
 
@@ -77,4 +78,39 @@ def get_lesson_detail(request, slug):
         'code': Response.status_code,
         'description': 'Lesson detail',
         'payload': serializer.data
+    })
+
+
+@api_view(['Post'])
+def post_comment(request):
+    serializer = PostCommentSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response({
+        'code': Response.status_code,
+        'errors': serializer.errors,
+        'payload': serializer.data if len(serializer.errors) == 0 else None
+    })
+
+
+@api_view(['GET'])
+def get_comments_by_lesson_id(request, lesson_id):
+    comments = Comments.objects.filter(lessonId=lesson_id).prefetch_related('replies')
+    serializer = GetCommentSerializer(comments, many=True)
+    return Response({
+        'code': Response.status_code,
+        'description': 'All Comments for a lesson',
+        'payload': serializer.data
+    })
+
+
+@api_view(['Post'])
+def reply_comment(request):
+    serializer = ReplyCommentSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response({
+        'code': Response.status_code,
+        'errors': serializer.errors,
+        'payload': serializer.data if len(serializer.errors) == 0 else None
     })

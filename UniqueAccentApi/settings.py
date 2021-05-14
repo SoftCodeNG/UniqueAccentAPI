@@ -147,7 +147,7 @@ STATIC_URL = '/static/rest_framework/'
 
 # Media Root
 MEDIA_ROOT = os.path.join(BASE_DIR, 'UploadedMediaFiles')
-MEDIA_URL = '/get-media/'
+MEDIA_URL = 'get-media/'
 
 # SimpleJWT Configuration
 SIMPLE_JWT = {

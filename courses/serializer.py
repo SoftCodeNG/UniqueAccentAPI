@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from courses.models import Courses, Lessons
+from courses.models import Courses, Lessons, Comments, Replies
 
 
 class CreateCourseSerializer(ModelSerializer):
@@ -40,4 +40,26 @@ class CreateLessonSerializer(ModelSerializer):
 class GetLessonsSerializer(ModelSerializer):
     class Meta:
         model = Lessons
+        fields = '__all__'
+
+
+class PostCommentSerializer(ModelSerializer):
+    comment = serializers.CharField(required=False)
+
+    class Meta:
+        model = Comments
+        fields = '__all__'
+
+
+class GetCommentSerializer(ModelSerializer):
+    class Meta:
+        model = Comments
+        fields = '__all__'
+
+
+class ReplyCommentSerializer(ModelSerializer):
+    comment = serializers.CharField(required=False)
+
+    class Meta:
+        model = Replies
         fields = '__all__'

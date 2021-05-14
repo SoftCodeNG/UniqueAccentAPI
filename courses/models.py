@@ -3,6 +3,7 @@ import random
 from django.db import models
 from django.utils.datetime_safe import datetime
 from django.utils.text import slugify
+from accounts.models import UserAccount
 
 
 class Courses(models.Model):
@@ -48,6 +49,20 @@ class Lessons(models.Model):
                 self.slug = slugify(self.title) + str(datetime.now().timestamp())
             else:
                 self.slug = slugify(self.title)
-        print('QQQQQQQQQQQQQQQQQQQQQEQ', self)
         super(Lessons, self).save(*args, **kwargs)
 
+
+class Comments(models.Model):
+    lessonId = models.ForeignKey(Lessons, on_delete=models.CASCADE, related_name='+')
+    userId = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name='+')
+    comment = models.TextField(blank=False, null=False)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
+
+
+class Replies(models.Model):
+    commentId = models.ForeignKey(Comments, on_delete=models.CASCADE, related_name='replies')
+    userId = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name='replies')
+    comment = models.TextField(blank=False, null=False)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
