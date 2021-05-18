@@ -48,7 +48,7 @@ def get_course_details(request, slug):
 def create_lesson(request):
     serializer = CreateLessonSerializer(data=request.data)
     if serializer.is_valid():
-        course = Courses.objects.get(pk=request.data['courseSlug'])
+        course = Courses.objects.get(slug=request.data['courseSlug'])
         course.lessons = int(course.lessons) + 1
         course.save()
         serializer.save()
