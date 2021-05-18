@@ -60,8 +60,8 @@ def create_lesson(request):
 
 
 @api_view(['GET'])
-def get_lessons_by_id(request, course_id):
-    lessons = Lessons.objects.filter(courseId=course_id)
+def get_lessons_by_id(request, course_slug):
+    lessons = Lessons.objects.filter(courseSlug=course_slug)
     serializer = GetLessonsSerializer(lessons, many=True)
     return Response({
         'code': Response.status_code,
