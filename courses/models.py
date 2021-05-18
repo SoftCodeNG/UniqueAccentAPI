@@ -31,7 +31,7 @@ class Courses(models.Model):
 
 
 class Lessons(models.Model):
-    courseId = models.ForeignKey(Courses, on_delete=models.CASCADE, related_name='+')
+    courseSlug = models.ForeignKey(Courses, to_field='slug', on_delete=models.CASCADE, related_name='course_lesson')
     title = models.CharField(max_length=100, blank=False, null=False)
     slug = models.SlugField(max_length=100, unique=True, blank=False, null=False)
     description = models.TextField(blank=False, null=False)
@@ -53,16 +53,16 @@ class Lessons(models.Model):
 
 
 class Comments(models.Model):
-    lessonId = models.ForeignKey(Lessons, on_delete=models.CASCADE, related_name='+')
-    userId = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name='+')
+    lessonId = models.ForeignKey(Lessons, on_delete=models.CASCADE, related_name='lesson_comment')
+    userId = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name='user_comment')
     comment = models.TextField(blank=False, null=False)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
 
 class Replies(models.Model):
-    commentId = models.ForeignKey(Comments, on_delete=models.CASCADE, related_name='replies')
-    userId = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name='replies')
+    commentId = models.ForeignKey(Comments, on_delete=models.CASCADE, related_name='comment_replies')
+    userId = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name='user_replies')
     comment = models.TextField(blank=False, null=False)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
