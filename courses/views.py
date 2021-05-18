@@ -6,6 +6,7 @@ from courses.serializer import CreateCourseSerializer, CreateLessonSerializer, G
     GetLessonsSerializer, PostCommentSerializer, GetCommentSerializer, ReplyCommentSerializer
 from accounts.models import UserAccount
 from services.checkToken import authenticateToken, isAdmin
+from rest_framework.pagination import PageNumberPagination
 
 
 @api_view(['POST'])
@@ -24,13 +25,12 @@ def create_course(request):
 
 @api_view(['GET'])
 def get_courses(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 2
     courses = Courses.objects.all()
+    courses = paginator.paginate_queryset(courses, request)
     serializer = GetCoursesSerializer(courses, many=True)
-    return Response({
-        'code': Response.status_code,
-        'description': 'All courses',
-        'payload': serializer.data
-    })
+    return paginator.get_paginated_response(serializer.data)
 
 
 @api_view(['GET'])
