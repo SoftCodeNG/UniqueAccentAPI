@@ -29,7 +29,7 @@ SECRET_KEY = env['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env['DEBUG']
 
-ALLOWED_HOSTS = ['unique-accent-api.herokuapp.com', 'localhost:4200', env['ALLOWED_HOSTS']]
+ALLOWED_HOSTS = ['unique-accent-api.herokuapp.com', 'localhost:4200', 'localhost:5200', env['ALLOWED_HOSTS']]
 
 
 # Application definition
