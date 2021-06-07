@@ -26,8 +26,8 @@ def create_course(request):
 @api_view(['GET'])
 def get_courses(request):
     paginator = PageNumberPagination()
-    paginator.page_size = 2
-    courses = Courses.objects.all()
+    paginator.page_size = 10
+    courses = Courses.objects.all().order_by('-updatedAt')
     courses = paginator.paginate_queryset(courses, request)
     serializer = GetCoursesSerializer(courses, many=True)
     return paginator.get_paginated_response(serializer.data)
