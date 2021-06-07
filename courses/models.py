@@ -53,16 +53,16 @@ class Lessons(models.Model):
 
 
 class Comments(models.Model):
-    lessonId = models.ForeignKey(Lessons, on_delete=models.CASCADE, related_name='lesson_comment')
-    userId = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name='user_comment')
+    lessonId = models.ForeignKey(Lessons, on_delete=models.CASCADE)
+    userId = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     comment = models.TextField(blank=False, null=False)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
 
 class Replies(models.Model):
-    commentId = models.ForeignKey(Comments, on_delete=models.CASCADE, related_name='comment_replies')
-    userId = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name='user_replies')
+    commentId = models.ForeignKey(Comments, on_delete=models.CASCADE, related_name='replies')
+    userId = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     comment = models.TextField(blank=False, null=False)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)

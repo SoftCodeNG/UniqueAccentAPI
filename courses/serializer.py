@@ -51,15 +51,18 @@ class PostCommentSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class GetCommentSerializer(ModelSerializer):
-    class Meta:
-        model = Comments
-        fields = '__all__'
-
-
 class ReplyCommentSerializer(ModelSerializer):
     comment = serializers.CharField(required=False)
 
     class Meta:
         model = Replies
         fields = '__all__'
+
+
+class GetCommentSerializer(ModelSerializer):
+    replies = ReplyCommentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Comments
+        fields = ['lessonId', 'userId', 'comment', 'createdAt', 'updatedAt', 'replies']
+
