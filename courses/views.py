@@ -95,7 +95,7 @@ def post_comment(request):
 
 @api_view(['GET'])
 def get_comments_by_lesson_id(request, lesson_id):
-    comments = Comments.objects.filter(lessonId=lesson_id).select_related('userId').prefetch_related('replies')
+    comments = Comments.objects.filter(lessonId=lesson_id).order_by('-updatedAt').select_related('userId').prefetch_related('replies')
     serializer = GetCommentSerializer(comments, many=True)
     return Response({
         'code': Response.status_code,

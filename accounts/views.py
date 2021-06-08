@@ -41,7 +41,7 @@ def registration_view(request):
 
 
 @api_view(['POST'])
-@isAdmin
+# @isAdmin
 def staff_registration_view(request):
     if request.method == 'POST':
         request_serializer = StaffRegistrationSerializer(data=request.data)
