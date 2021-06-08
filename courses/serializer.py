@@ -52,16 +52,18 @@ class PostCommentSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class ReplyCommentSerializer(ModelSerializer):
-    class Meta:
-        model = Replies
-        fields = '__all__'
-
-
 class UserSerializer(ModelSerializer):
     class Meta:
         model = UserAccount
-        fields = '__all__'
+        fields = ['id', 'name', 'isStaff', 'isAdmin']
+
+
+class ReplyCommentSerializer(ModelSerializer):
+    user = UserSerializer(read_only=True, source='userId')
+
+    class Meta:
+        model = Replies
+        fields = ['id', 'commentId', 'user', 'comment', 'createdAt', 'updatedAt']
 
 
 class GetCommentSerializer(ModelSerializer):
@@ -70,5 +72,5 @@ class GetCommentSerializer(ModelSerializer):
 
     class Meta:
         model = Comments
-        fields = ['lessonId', 'user', 'comment', 'createdAt', 'updatedAt', 'replies']
+        fields = ['id', 'lessonId', 'user', 'comment', 'createdAt', 'updatedAt', 'replies']
 
