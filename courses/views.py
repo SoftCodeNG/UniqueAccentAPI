@@ -3,7 +3,7 @@ from rest_framework.response import Response
 
 from courses.models import Courses, Lessons, Comments
 from courses.serializer import CreateCourseSerializer, CreateLessonSerializer, GetCoursesSerializer, \
-    GetLessonsSerializer, PostCommentSerializer, GetCommentSerializer, ReplyCommentSerializer
+    GetLessonsSerializer, PostCommentSerializer, GetCommentSerializer, ReplyCommentSerializer, CourseStatusSerializer
 from accounts.models import UserAccount
 from services.checkToken import authenticateToken, isAdmin
 from rest_framework.pagination import PageNumberPagination
@@ -14,6 +14,36 @@ from rest_framework.pagination import PageNumberPagination
 # @isAdmin
 def create_course(request):
     serializer = CreateCourseSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response({
+        'code': Response.status_code,
+        'errors': serializer.errors,
+        'payload': serializer.data if len(serializer.errors) == 0 else None
+    })
+
+
+@api_view(['PUT'])
+# @authenticateToken
+# @isAdmin
+def update_course(request, slug):
+    course = Courses.objects.get(slug=slug)
+    serializer = CreateCourseSerializer(course, many=False, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response({
+        'code': Response.status_code,
+        'errors': serializer.errors,
+        'payload': serializer.data if len(serializer.errors) == 0 else None
+    })
+
+
+@api_view(['PUT'])
+# @authenticateToken
+# @isAdmin
+def course_status(request, slug):
+    course = Courses.objects.get(slug=slug)
+    serializer = CourseStatusSerializer(course, many=False, data=request.data)
     if serializer.is_valid():
         serializer.save()
     return Response({

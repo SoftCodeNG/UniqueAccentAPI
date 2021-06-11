@@ -19,6 +19,22 @@ class CreateCourseSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class CourseStatusSerializer(ModelSerializer):
+    title = serializers.CharField(required=False)
+    description = serializers.CharField(required=False)
+    slug = serializers.CharField(required=False)
+    duration = serializers.IntegerField(required=False)
+    thumbnail = serializers.CharField(required=False)
+    video = serializers.CharField(required=False)
+    price = serializers.IntegerField(required=False)
+    isPublished = serializers.BooleanField(required=True)
+
+
+    class Meta:
+        model = Courses
+        fields = '__all__'
+
+
 class GetCoursesSerializer(ModelSerializer):
     class Meta:
         model = Courses

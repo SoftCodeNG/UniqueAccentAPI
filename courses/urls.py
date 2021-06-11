@@ -1,10 +1,12 @@
 ﻿from django.urls import path
 
 from courses.views import create_course, get_courses, get_course_details, create_lesson, get_lessons_by_id, \
-    get_lesson_detail, post_comment, get_comments_by_lesson_id, reply_comment
+    get_lesson_detail, post_comment, get_comments_by_lesson_id, reply_comment, update_course, course_status
 
 urlpatterns = [
     path('createCourse', create_course, name='createCourse'),
+    path('updateCourse/<str:slug>', update_course, name='updateCourse'),
+    path('changeCourseStatus/<str:slug>', course_status, name='publishCourse'),
     path('getCourses', get_courses, name='getCourses'),
     path('getCourseDetails/<str:slug>', get_course_details, name='getCourseDetails'),
     path('createLesson', create_lesson, name='createLesson'),
