@@ -89,6 +89,19 @@ def create_lesson(request):
     })
 
 
+@api_view(['PUT'])
+def update_lesson(request, slug):
+    lesson = Lessons.objects.get(slug=slug)
+    serializer = CreateLessonSerializer(lesson, many=False, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response({
+        'code': Response.status_code,
+        'errors': serializer.errors,
+        'payload': serializer.data if len(serializer.errors) == 0 else None
+    })
+
+
 @api_view(['GET'])
 def get_lessons_by_id(request, course_slug):
     lessons = Lessons.objects.filter(courseSlug=course_slug)
