@@ -24,6 +24,7 @@ class AccountManager(BaseUserManager):
 
 
 class UserAccount(AbstractBaseUser):
+    id = models.AutoField(primary_key=True)
     email = models.EmailField(verbose_name='email address', max_length=60, unique=True)
     name = models.CharField(blank=False, null=False, max_length=20)
     isStaff = models.BooleanField(blank=False, null=False, default=False)

@@ -7,6 +7,7 @@ from accounts.models import UserAccount
 
 
 class Courses(models.Model):
+    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100, blank=False, null=False)
     slug = models.SlugField(max_length=100, unique=True, blank=False, null=False)
     description = models.TextField(blank=False, null=False)
@@ -31,6 +32,7 @@ class Courses(models.Model):
 
 
 class Lessons(models.Model):
+    id = models.AutoField(primary_key=True)
     courseSlug = models.ForeignKey(Courses, to_field='slug', on_delete=models.CASCADE, related_name='course_lesson')
     title = models.CharField(max_length=100, blank=False, null=False)
     slug = models.SlugField(max_length=100, unique=True, blank=False, null=False)
@@ -53,6 +55,7 @@ class Lessons(models.Model):
 
 
 class Comments(models.Model):
+    id = models.AutoField(primary_key=True)
     lessonId = models.ForeignKey(Lessons, on_delete=models.CASCADE)
     userId = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     comment = models.TextField(blank=False, null=False)
@@ -61,6 +64,7 @@ class Comments(models.Model):
 
 
 class Replies(models.Model):
+    id = models.AutoField(primary_key=True)
     commentId = models.ForeignKey(Comments, on_delete=models.CASCADE, related_name='replies')
     userId = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     comment = models.TextField(blank=False, null=False)
