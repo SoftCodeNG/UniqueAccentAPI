@@ -9,7 +9,7 @@ from services.checkToken import authenticateToken
 
 
 @api_view(['POST'])
-# @authenticateToken
+@authenticateToken
 def upload_media(request):
     data = request.data
     file = request.FILES
@@ -43,7 +43,7 @@ def upload_media(request):
 
 
 @api_view(['GET'])
-# @authenticateToken
+@authenticateToken
 def get_all_media(request):
     media = Media.objects.all()
     serializer = GetUserMediaSerializer(media, many=True)
@@ -56,7 +56,7 @@ def get_all_media(request):
 
 
 @api_view(['GET'])
-# @authenticateToken
+@authenticateToken
 def get_all_images(request):
     media = Media.objects.filter(fileType__exact='image')
     serializer = GetUserMediaSerializer(media, many=True)
@@ -69,7 +69,7 @@ def get_all_images(request):
 
 
 @api_view(['GET'])
-# @authenticateToken
+@authenticateToken
 def get_all_videos(request):
     media = Media.objects.filter(fileType__exact='video')
     serializer = GetUserMediaSerializer(media, many=True)
@@ -82,7 +82,7 @@ def get_all_videos(request):
 
 
 @api_view(['GET'])
-# @authenticateToken
+@authenticateToken
 def get_all_audio(request):
     media = Media.objects.filter(fileType__exact='audio')
     serializer = GetUserMediaSerializer(media, many=True)

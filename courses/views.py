@@ -10,8 +10,8 @@ from rest_framework.pagination import PageNumberPagination
 
 
 @api_view(['POST'])
-# @authenticateToken
-# @isAdmin
+@authenticateToken
+@isAdmin
 def create_course(request):
     serializer = CreateCourseSerializer(data=request.data)
     if serializer.is_valid():
@@ -24,8 +24,8 @@ def create_course(request):
 
 
 @api_view(['PUT'])
-# @authenticateToken
-# @isAdmin
+@authenticateToken
+@isAdmin
 def update_course(request, slug):
     course = Courses.objects.get(slug=slug)
     serializer = CreateCourseSerializer(course, many=False, data=request.data)
@@ -39,8 +39,8 @@ def update_course(request, slug):
 
 
 @api_view(['PUT'])
-# @authenticateToken
-# @isAdmin
+@authenticateToken
+@isAdmin
 def course_status(request, slug):
     course = Courses.objects.get(slug=slug)
     serializer = CourseStatusSerializer(course, many=False, data=request.data)
@@ -75,6 +75,8 @@ def get_course_details(request, slug):
 
 
 @api_view(['POST'])
+@authenticateToken
+@isAdmin
 def create_lesson(request):
     serializer = CreateLessonSerializer(data=request.data)
     if serializer.is_valid():
@@ -90,6 +92,8 @@ def create_lesson(request):
 
 
 @api_view(['PUT'])
+@authenticateToken
+@isAdmin
 def update_lesson(request, slug):
     lesson = Lessons.objects.get(slug=slug)
     serializer = CreateLessonSerializer(lesson, many=False, data=request.data)
@@ -125,6 +129,7 @@ def get_lesson_detail(request, slug):
 
 
 @api_view(['Post'])
+@authenticateToken
 def post_comment(request):
     serializer = PostCommentSerializer(data=request.data)
     if serializer.is_valid():
@@ -137,6 +142,7 @@ def post_comment(request):
 
 
 @api_view(['GET'])
+@authenticateToken
 def get_comments_by_lesson_id(request, lesson_id):
     comments = Comments.objects.filter(lessonId=lesson_id).order_by('-updatedAt').select_related('userId').prefetch_related('replies')
     serializer = GetCommentSerializer(comments, many=True)
@@ -148,6 +154,7 @@ def get_comments_by_lesson_id(request, lesson_id):
 
 
 @api_view(['Post'])
+@authenticateToken
 def reply_comment(request):
     serializer = ReplyCommentSerializer(data=request.data)
     if serializer.is_valid():
