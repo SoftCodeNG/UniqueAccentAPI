@@ -19,7 +19,6 @@ env = dotenv_values(".env")
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -29,8 +28,8 @@ SECRET_KEY = env['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env['DEBUG']
 
-ALLOWED_HOSTS = ['unique-accent-api.herokuapp.com', 'http://localhost:4200', 'http://localhost:5200', env['ALLOWED_HOSTS']]
-
+ALLOWED_HOSTS = ['unique-accent-api.herokuapp.com', 'http://localhost:4200', 'http://localhost:5200',
+                 env['ALLOWED_HOSTS']]
 
 # Application definition
 
@@ -46,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
     'courses',
     'media',
+    'settings',
     'corsheaders'
 ]
 
@@ -60,9 +60,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:4200', 'https://uniqueaccent.com.ng'
-)
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:4200', 'https://uniqueaccent.com.ng', 'http://localhost:5200',
+]
 
 ROOT_URLCONF = 'UniqueAccentApi.urls'
 
@@ -84,7 +84,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'UniqueAccentApi.wsgi.application'
 
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework_simplejwt.authentication.JWTAuthentication'],
 }
@@ -105,7 +104,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -124,7 +122,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -137,7 +134,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/

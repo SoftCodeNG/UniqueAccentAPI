@@ -12,7 +12,6 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         if response.status_code == 200:
             email = request.data['email']
             user = UserAccount.objects.get(email=email)
-            print(user)
             user.last_login = datetime.now()
             user.save()
         return response
