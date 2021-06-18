@@ -56,8 +56,18 @@ def course_status(request, slug):
 @api_view(['GET'])
 def get_courses(request):
     paginator = PageNumberPagination()
-    paginator.page_size = 10
+    paginator.page_size = 12
     courses = Courses.objects.all().order_by('-updatedAt')
+    courses = paginator.paginate_queryset(courses, request)
+    serializer = GetCoursesSerializer(courses, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
+
+@api_view(['GET'])
+def search_courses(request, searchValue):
+    paginator = PageNumberPagination()
+    paginator.page_size = 12
+    courses = Courses.objects.filter(title__contains=searchValue).order_by('-updatedAt')
     courses = paginator.paginate_queryset(courses, request)
     serializer = GetCoursesSerializer(courses, many=True)
     return paginator.get_paginated_response(serializer.data)
