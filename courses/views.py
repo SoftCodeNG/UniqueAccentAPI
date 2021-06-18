@@ -64,10 +64,10 @@ def get_courses(request):
 
 
 @api_view(['GET'])
-def search_courses(request, searchValue):
+def search_courses(request, value):
     paginator = PageNumberPagination()
     paginator.page_size = 12
-    courses = Courses.objects.filter(title__contains=searchValue).order_by('-updatedAt')
+    courses = Courses.objects.filter(title__contains=value).order_by('-updatedAt')
     courses = paginator.paginate_queryset(courses, request)
     serializer = GetCoursesSerializer(courses, many=True)
     return paginator.get_paginated_response(serializer.data)
