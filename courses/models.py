@@ -31,6 +31,15 @@ class Courses(models.Model):
         super(Courses, self).save(*args, **kwargs)
 
 
+class UserCourseAccess(models.Model):
+    id = models.AutoField(primary_key=True)
+    userId = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    courseId = models.ForeignKey(Courses, on_delete=models.CASCADE, related_name='user_course')
+    isPurchased = models.BooleanField(default=True)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
+
+
 class Lessons(models.Model):
     id = models.AutoField(primary_key=True)
     courseSlug = models.ForeignKey(Courses, to_field='slug', on_delete=models.CASCADE, related_name='course_lesson')
@@ -47,7 +56,7 @@ class Lessons(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             # Newly created object, so set slug
-            if Courses.objects.filter(slug=slugify(self.title)).exists():
+            if Lessons.objects.filter(slug=slugify(self.title)).exists():
                 self.slug = slugify(self.title) + str(datetime.now().timestamp())
             else:
                 self.slug = slugify(self.title)

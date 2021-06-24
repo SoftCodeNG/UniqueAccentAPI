@@ -1,9 +1,10 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from courses.models import Courses, Lessons, Comments
+from courses.models import Courses, Lessons, Comments, UserCourseAccess
 from courses.serializer import CreateCourseSerializer, CreateLessonSerializer, GetCoursesSerializer, \
-    GetLessonsSerializer, PostCommentSerializer, GetCommentSerializer, ReplyCommentSerializer, CourseStatusSerializer
+    GetLessonsSerializer, PostCommentSerializer, GetCommentSerializer, ReplyCommentSerializer, CourseStatusSerializer, \
+    GrantUserCourseAccessSerializer
 from accounts.models import UserAccount
 from services.checkToken import authenticateToken, isAdmin
 from rest_framework.pagination import PageNumberPagination
@@ -86,12 +87,52 @@ def get_course_details(request, slug):
 
 @api_view(['POST'])
 @authenticateToken
-@isAdmin
+def grant_user_course_access(request):
+    checkIfAccessIsAlreadyGranted = UserCourseAccess.objects.filter(userId=request.data['userId'], courseId=request.data['courseId'])
+
+    if not checkIfAccessIsAlreadyGranted:
+        serializer = GrantUserCourseAccessSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        return Response({
+            'code': Response.status_code,
+            'description': 'User Assigned to course',
+            'payload': serializer.data
+        })
+    else:
+        return Response({
+            'code': Response.status_code,
+            'description': 'Already assigned to course',
+            'payload': None
+        })
+
+
+@api_view(['GET'])
+@authenticateToken
+def get_user_courses(request, user_id):
+    user_course = UserCourseAccess.objects.filter(userId=user_id).select_related('courseId')
+    serializer = GrantUserCourseAccessSerializer(user_course, many=True)
+
+    all_user_courses = []
+    for x in serializer.data:
+        all_user_courses.append(x['course'])
+
+    return Response({
+        'code': Response.status_code,
+        'description': 'List of all user courses',
+        'payload': all_user_courses
+    })
+
+
+@api_view(['POST'])
+@authenticateToken
+# @isAdmin
 def create_lesson(request):
     serializer = CreateLessonSerializer(data=request.data)
     if serializer.is_valid():
         course = Courses.objects.get(slug=request.data['courseSlug'])
         course.lessons = int(course.lessons) + 1
+        course.duration = course.duration + int(course.duration)
         course.save()
         serializer.save()
     return Response({
@@ -154,7 +195,8 @@ def post_comment(request):
 @api_view(['GET'])
 @authenticateToken
 def get_comments_by_lesson_id(request, lesson_id):
-    comments = Comments.objects.filter(lessonId=lesson_id).order_by('-updatedAt').select_related('userId').prefetch_related('replies')
+    comments = Comments.objects.filter(lessonId=lesson_id).order_by('-updatedAt').select_related(
+        'userId').prefetch_related('replies')
     serializer = GetCommentSerializer(comments, many=True)
     return Response({
         'code': Response.status_code,

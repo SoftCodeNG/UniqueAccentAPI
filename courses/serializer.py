@@ -2,7 +2,14 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from accounts.models import UserAccount
-from courses.models import Courses, Lessons, Comments, Replies
+from courses.models import Courses, Lessons, Comments, Replies, UserCourseAccess
+
+
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = UserAccount
+        fields = ['id', 'name', 'isStaff', 'isAdmin']
+
 
 
 class CreateCourseSerializer(ModelSerializer):
@@ -54,6 +61,14 @@ class CreateLessonSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class GrantUserCourseAccessSerializer(ModelSerializer):
+    course = GetCoursesSerializer(read_only=True, source='courseId')
+
+    class Meta:
+        model = UserCourseAccess
+        fields = ['course']
+
+
 class GetLessonsSerializer(ModelSerializer):
     class Meta:
         model = Lessons
@@ -72,12 +87,6 @@ class ReplyCommentSerializer(ModelSerializer):
     class Meta:
         model = Replies
         fields = '__all__'
-
-
-class UserSerializer(ModelSerializer):
-    class Meta:
-        model = UserAccount
-        fields = ['id', 'name', 'isStaff', 'isAdmin']
 
 
 class GetCommentReplySerializer(ModelSerializer):
