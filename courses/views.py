@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from courses.models import Courses, Lessons, Comments, UserCourseAccess
 from courses.serializer import CreateCourseSerializer, CreateLessonSerializer, GetCoursesSerializer, \
     GetLessonsSerializer, PostCommentSerializer, GetCommentSerializer, ReplyCommentSerializer, CourseStatusSerializer, \
-    GrantUserCourseAccessSerializer
+    GetUserCoursesSerializer, GrantUserCourseAccessSerializer
 from accounts.models import UserAccount
 from services.checkToken import authenticateToken, isAdmin
 from rest_framework.pagination import PageNumberPagination
@@ -88,9 +88,9 @@ def get_course_details(request, slug):
 @api_view(['POST'])
 @authenticateToken
 def grant_user_course_access(request):
-    checkIfAccessIsAlreadyGranted = UserCourseAccess.objects.filter(userId=request.data['userId'], courseId=request.data['courseId'])
+    check_if_access_is_already_granted = UserCourseAccess.objects.filter(userId=request.data['userId'], courseId=request.data['courseId'])
 
-    if not checkIfAccessIsAlreadyGranted:
+    if not check_if_access_is_already_granted:
         serializer = GrantUserCourseAccessSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -111,7 +111,7 @@ def grant_user_course_access(request):
 @authenticateToken
 def get_user_courses(request, user_id):
     user_course = UserCourseAccess.objects.filter(userId=user_id).select_related('courseId')
-    serializer = GrantUserCourseAccessSerializer(user_course, many=True)
+    serializer = GetUserCoursesSerializer(user_course, many=True)
 
     all_user_courses = []
     for x in serializer.data:

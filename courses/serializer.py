@@ -62,6 +62,13 @@ class CreateLessonSerializer(ModelSerializer):
 
 
 class GrantUserCourseAccessSerializer(ModelSerializer):
+
+    class Meta:
+        model = UserCourseAccess
+        fields = '__all__'
+
+
+class GetUserCoursesSerializer(ModelSerializer):
     course = GetCoursesSerializer(read_only=True, source='courseId')
 
     class Meta:
