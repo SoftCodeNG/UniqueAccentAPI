@@ -110,7 +110,7 @@ def grant_user_course_access(request):
 @api_view(['GET'])
 @authenticateToken
 def get_user_courses(request, user_id):
-    user_course = UserCourseAccess.objects.filter(userId=user_id).select_related('courseId')
+    user_course = UserCourseAccess.objects.order_by('-updatedAt').filter(userId=user_id).select_related('courseId')
     serializer = GetUserCoursesSerializer(user_course, many=True)
 
     all_user_courses = []
