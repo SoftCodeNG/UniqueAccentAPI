@@ -6,7 +6,7 @@ from courses.serializer import CreateCourseSerializer, CreateLessonSerializer, G
     GetLessonsSerializer, PostCommentSerializer, GetCommentSerializer, ReplyCommentSerializer, CourseStatusSerializer, \
     GetUserCoursesSerializer, GrantUserCourseAccessSerializer
 from accounts.models import UserAccount
-from services.checkToken import authenticateToken, isAdmin
+from services.checkToken import authenticateToken, isAdmin, isStaff
 from rest_framework.pagination import PageNumberPagination
 
 
@@ -55,10 +55,22 @@ def course_status(request, slug):
 
 
 @api_view(['GET'])
+@authenticateToken
+@isStaff
 def get_courses(request):
     paginator = PageNumberPagination()
     paginator.page_size = 12
     courses = Courses.objects.all().order_by('-updatedAt')
+    courses = paginator.paginate_queryset(courses, request)
+    serializer = GetCoursesSerializer(courses, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
+
+@api_view(['GET'])
+def get_published_courses(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 12
+    courses = Courses.objects.filter(isPublished=True).order_by('-updatedAt')
     courses = paginator.paginate_queryset(courses, request)
     serializer = GetCoursesSerializer(courses, many=True)
     return paginator.get_paginated_response(serializer.data)
@@ -154,6 +166,19 @@ def update_lesson(request, slug):
         'code': Response.status_code,
         'errors': serializer.errors,
         'payload': serializer.data if len(serializer.errors) == 0 else None
+    })
+
+
+@api_view(['DELETE'])
+@authenticateToken
+@isAdmin
+def delete_lesson(request, slug):
+    lesson = Lessons.objects.get(slug=slug)
+    lesson.delete()
+    return Response({
+        'code': Response.status_code,
+        'description': 'Lesson deleted successfully',
+        'payload': 'Lesson deleted successfully'
     })
 
 
