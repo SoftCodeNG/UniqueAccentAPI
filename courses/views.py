@@ -1,3 +1,6 @@
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -8,6 +11,8 @@ from courses.serializer import CreateCourseSerializer, CreateLessonSerializer, G
 from accounts.models import UserAccount
 from services.checkToken import authenticateToken, isAdmin, isStaff
 from rest_framework.pagination import PageNumberPagination
+
+from services.sendEmail import send_purchase_confirmation
 
 
 @api_view(['POST'])
@@ -117,7 +122,17 @@ def grant_user_course_access(request):
         if serializer.is_valid():
             if request.data['isPurchased']:
                 course = Courses.objects.get(pk=request.data['courseId'])
+                user = UserAccount.objects.get(pk=request.data['userId'])
                 Courses.objects.filter(pk=request.data['courseId']).update(purchases=course.purchases + 1)
+                html_message = send_purchase_confirmation(user.name, user.email, course.title)
+                plain_message = strip_tags(html_message)
+                send_mail(
+                    'Thanks for your purchase',
+                    plain_message,
+                    'noreply@uniqueaccent.com.ng',
+                    [user.email],
+                    html_message=html_message
+                )
             serializer.save()
         return Response({
             'code': Response.status_code,
