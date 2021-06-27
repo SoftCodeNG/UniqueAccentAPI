@@ -59,8 +59,8 @@ def course_status(request, slug):
 @isStaff
 def get_courses(request):
     paginator = PageNumberPagination()
-    paginator.page_size = 12
-    courses = Courses.objects.all().order_by('-updatedAt')
+    paginator.page_size = 5
+    courses = Courses.objects.all().order_by('-updatedAt').prefetch_related('user_course')
     courses = paginator.paginate_queryset(courses, request)
     serializer = GetCoursesSerializer(courses, many=True)
     return paginator.get_paginated_response(serializer.data)
@@ -79,8 +79,18 @@ def get_published_courses(request):
 @api_view(['GET'])
 def search_courses(request, value):
     paginator = PageNumberPagination()
-    paginator.page_size = 12
+    paginator.page_size = 5
     courses = Courses.objects.filter(title__icontains=value).order_by('-updatedAt')
+    courses = paginator.paginate_queryset(courses, request)
+    serializer = GetCoursesSerializer(courses, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
+
+@api_view(['GET'])
+def search_published_courses(request, value):
+    paginator = PageNumberPagination()
+    paginator.page_size = 12
+    courses = Courses.objects.filter(isPublished=True).filter(title__icontains=value).order_by('-updatedAt')
     courses = paginator.paginate_queryset(courses, request)
     serializer = GetCoursesSerializer(courses, many=True)
     return paginator.get_paginated_response(serializer.data)
@@ -105,6 +115,9 @@ def grant_user_course_access(request):
     if not check_if_access_is_already_granted:
         serializer = GrantUserCourseAccessSerializer(data=request.data)
         if serializer.is_valid():
+            if request.data['isPurchased']:
+                course = Courses.objects.get(pk=request.data['courseId'])
+                Courses.objects.filter(pk=request.data['courseId']).update(purchases=course.purchases + 1)
             serializer.save()
         return Response({
             'code': Response.status_code,
