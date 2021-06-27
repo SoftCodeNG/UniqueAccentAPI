@@ -42,19 +42,11 @@ class CourseStatusSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class GetCoursesOwnersSerializer(ModelSerializer):
-
-    class Meta:
-        model = UserCourseAccess
-        fields = '__all__'
-
-
 class GetCoursesSerializer(ModelSerializer):
-    user_course = GetCoursesOwnersSerializer(many=True, read_only=True)
 
     class Meta:
         model = Courses
-        fields = ['id', 'title', 'slug', 'description', 'duration', 'thumbnail', 'video', 'price', 'purchases', 'user_course', 'lessons', 'isPublished', 'createdAt', 'updatedAt']
+        fields = '__all__'
 
 
 class CreateLessonSerializer(ModelSerializer):
