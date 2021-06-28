@@ -82,6 +82,16 @@ def get_published_courses(request):
 
 
 @api_view(['GET'])
+def get_courses_for_homepage(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 3
+    courses = Courses.objects.filter(isPublished=True).order_by('-createdAt')
+    courses = paginator.paginate_queryset(courses, request)
+    serializer = GetCoursesSerializer(courses, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
+
+@api_view(['GET'])
 def search_courses(request, value):
     paginator = PageNumberPagination()
     paginator.page_size = 5
