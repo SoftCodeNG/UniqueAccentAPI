@@ -34,8 +34,8 @@ class Quiz(models.Model):
 class Questions(models.Model):
     id = models.AutoField(primary_key=True)
     quizId = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    questionNo = models.IntegerField(max_length=2, null=False)
+    questionNo = models.IntegerField(null=False)
     question = models.TextField(blank=False, null=False)
-    maxScore = models.IntegerField(max_length=2, null=False)
+    maxScore = models.IntegerField(null=False)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
