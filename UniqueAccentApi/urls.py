@@ -24,5 +24,6 @@ urlpatterns = [
     path('auth/', include('authentication.urls')),
     path('accounts/', include('accounts.urls')),
     path('courses/', include('courses.urls')),
+    path('quiz/', include('quiz.urls')),
     path('media/', include('media.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

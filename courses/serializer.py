@@ -11,7 +11,6 @@ class UserSerializer(ModelSerializer):
         fields = ['id', 'name', 'isStaff', 'isAdmin']
 
 
-
 class CreateCourseSerializer(ModelSerializer):
     title = serializers.CharField(required=True)
     description = serializers.CharField(required=True)
@@ -35,7 +34,6 @@ class CourseStatusSerializer(ModelSerializer):
     video = serializers.CharField(required=False)
     price = serializers.IntegerField(required=False)
     isPublished = serializers.BooleanField(required=True)
-
 
     class Meta:
         model = Courses
@@ -112,4 +110,3 @@ class GetCommentSerializer(ModelSerializer):
     class Meta:
         model = Comments
         fields = ['id', 'lessonId', 'user', 'comment', 'createdAt', 'updatedAt', 'replies']
-

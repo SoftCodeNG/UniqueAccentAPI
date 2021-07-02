@@ -92,6 +92,7 @@ def get_courses_for_homepage(request):
 
 
 @api_view(['GET'])
+@isStaff
 def search_courses(request, value):
     paginator = PageNumberPagination()
     paginator.page_size = 5
@@ -130,19 +131,19 @@ def grant_user_course_access(request):
     if not check_if_access_is_already_granted:
         serializer = GrantUserCourseAccessSerializer(data=request.data)
         if serializer.is_valid():
-            if request.data['isPurchased']:
-                course = Courses.objects.get(pk=request.data['courseId'])
-                user = UserAccount.objects.get(pk=request.data['userId'])
-                Courses.objects.filter(pk=request.data['courseId']).update(purchases=course.purchases + 1)
-                html_message = send_purchase_confirmation(user.name, user.email, course.title)
-                plain_message = strip_tags(html_message)
-                send_mail(
-                    'Thanks for your purchase',
-                    plain_message,
-                    'noreply@uniqueaccent.com.ng',
-                    [user.email],
-                    html_message=html_message
-                )
+            # if request.data['isPurchased']:
+            #     course = Courses.objects.get(pk=request.data['courseId'])
+            #     user = UserAccount.objects.get(pk=request.data['userId'])
+            #     Courses.objects.filter(pk=request.data['courseId']).update(purchases=course.purchases + 1)
+            #     html_message = send_purchase_confirmation(user.name, user.email, course.title)
+            #     plain_message = strip_tags(html_message)
+            #     send_mail(
+            #         'Thanks for your purchase',
+            #         plain_message,
+            #         'noreply@uniqueaccent.com.ng',
+            #         [user.email],
+            #         html_message=html_message
+            #     )
             serializer.save()
         return Response({
             'code': Response.status_code,
@@ -176,7 +177,7 @@ def get_user_courses(request, user_id):
 
 @api_view(['POST'])
 @authenticateToken
-# @isAdmin
+@isAdmin
 def create_lesson(request):
     serializer = CreateLessonSerializer(data=request.data)
     if serializer.is_valid():

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'authentication',
     'accounts',
     'courses',
+    'quiz',
     'media',
     'settings',
     'corsheaders'
