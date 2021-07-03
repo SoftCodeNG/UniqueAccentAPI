@@ -133,17 +133,17 @@ def login_with_google(request):
         user = User.objects.get(email=data['email'])
     except User.DoesNotExist:
         # provider random default password
-        lower = string.ascii_lowercase
-        upper = string.ascii_uppercase
-        num = string.digits
-        symbols = string.punctuation
-        all = lower + upper + num + symbols
-        temp = random.sample(all, 10)
-        password = "".join(temp)
-        print(password)
+        # lower = string.ascii_lowercase
+        # upper = string.ascii_uppercase
+        # num = string.digits
+        # symbols = string.punctuation
+        # all = lower + upper + num + symbols
+        # temp = random.sample(all, 10)
+        # password = "".join(temp)
+        # print(password)
 
         user = User()
-        user.password = password
+        user.password = make_password(BaseUserManager().make_random_password())
         user.name = request.data.get("name")
         user.email = data['email']
         user.save()
