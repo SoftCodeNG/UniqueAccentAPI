@@ -1,11 +1,20 @@
+import random
+import string
+
+from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User
 from rest_framework.response import Response
 import requests
 from rest_framework.decorators import api_view
 from django.core.mail import send_mail
+from rest_framework.utils import json
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from accounts.serializers import RegistrationSerializer, StaffRegistrationSerializer, AdminRegistrationSerializer
 from services.checkToken import isAdmin
-
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 @api_view(['POST'])
 def registration_view(request):
@@ -107,3 +116,45 @@ def admin_registration_view(request):
         else:
             return Response(request_serializer.errors)
 
+
+@api_view(['POST'])
+def login_with_google(request):
+    payload = {'access_token': request.data.get("token")}  # validate the token
+    r = requests.get('https://www.googleapis.com/oauth2/v2/userinfo', params=payload)
+    data = json.loads(r.text)
+    print(data)
+
+    if 'error' in data:
+        content = {'message': 'wrong google token / this google token is already expired.'}
+        return Response(content)
+
+    # create user if not exist
+    try:
+        user = User.objects.get(email=data['email'])
+    except User.DoesNotExist:
+        # provider random default password
+        lower = string.ascii_lowercase
+        upper = string.ascii_uppercase
+        num = string.digits
+        symbols = string.punctuation
+        all = lower + upper + num + symbols
+        temp = random.sample(all, 10)
+        password = "".join(temp)
+        print(password)
+
+        user = User()
+        user.password = password
+        user.name = request.data.get("name")
+        user.email = data['email']
+        user.save()
+
+    token = RefreshToken.for_user(user)  # generate token without username & password
+    response = {}
+    # response['username'] = user.username
+    response['access'] = str(token.access_token)
+    response['refresh'] = str(token)
+    response['isAdmin'] = user.isAdmin
+    response['isStaff'] = user.isStaff
+    response['lastLogin'] = user.last_login
+    response['user'] = user.name
+    return Response(response)
