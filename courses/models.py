@@ -14,7 +14,7 @@ class Courses(models.Model):
     duration = models.IntegerField(default=0, null=False)
     thumbnail = models.CharField(max_length=500, null=False)
     video = models.CharField(max_length=500, null=False)
-    price = models.DecimalField(max_digits=11, decimal_places=3, null=False)
+    price = models.DecimalField(max_digits=11, decimal_places=2, null=False)
     purchases = models.IntegerField(default=0, null=False)
     lessons = models.IntegerField(default=0, null=False)
     isPublished = models.BooleanField(default=False, null=False)
