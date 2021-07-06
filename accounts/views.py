@@ -1,4 +1,3 @@
-
 from datetime import datetime
 
 from django.contrib.auth.base_user import BaseUserManager
@@ -9,14 +8,17 @@ import requests
 from rest_framework.decorators import api_view
 from django.core.mail import send_mail
 from rest_framework.utils import json
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, Token
 
+from accounts.models import UserAccount
 from accounts.serializers import RegistrationSerializer, StaffRegistrationSerializer, AdminRegistrationSerializer
 from services.checkToken import isAdmin
 from django.contrib.auth import get_user_model
 
+from services.sendEmail import send_reset_password_email
 
 User = get_user_model()
+
 
 @api_view(['POST'])
 def registration_view(request):
@@ -152,3 +154,21 @@ def login_with_google(request):
         'user': user.name
     }
     return Response(response)
+
+
+@api_view(['POST'])
+def forget_password(request):
+    user_account = UserAccount.objects.get(email__exact=request.data.get('email'))
+    token = RefreshToken.for_user(user_account)
+
+    send_mail(
+        'Password Reset Confirmation',
+        send_reset_password_email(token),
+        'austineforall@gmail.com',
+        [request.data.get('email')]
+    )
+    print(token)
+
+    return Response({
+        'description': 'A resent link was sent to your email.'
+    })

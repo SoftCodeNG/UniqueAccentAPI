@@ -6,6 +6,7 @@ from quiz.models import Quiz, Questions
 
 class CreateQuizSerializer(ModelSerializer):
     title = serializers.CharField(required=True)
+    slug = serializers.CharField(required=False)
     instruction = serializers.CharField(required=True)
     duration = serializers.IntegerField(required=True)
     startDate = serializers.DateTimeField(required=True)

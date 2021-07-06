@@ -315,3 +315,12 @@ def send_purchase_confirmation(user_name, user_email, product_name):
    </div>
 
   </div>'''
+
+
+def send_reset_password_email(token):
+    return f'''
+    Hi Kindly click on the <a href="https://uniqueaccent.com.ng/accounts/resetPassword/{token}">link</a> 
+    to reset your password.
+    
+    <a href="https://uniqueaccent.com.ng/accounts/resetPassword/{token}">{token}</a> 
+    '''
