@@ -1,3 +1,5 @@
+from django.core.mail import send_mail
+
 
 def send_purchase_confirmation(user_name, user_email, product_name):
     return f'''<div style="background-color:#ffffff;background-position:top;background-image:url('https://ci5.googleusercontent.com/proxy/qqN6grZKTiVXosze0-u3xZP_bKNaVVvXgSZAITMtFlibWxuMKCpI2xoiIfbQ8uJsYGDjoRkpgMNJyrfVoZJWMfI06j0iNt4NXSwr6xomedfKNmO-NeKWKCzP1RSTCX3a21Aj=s0-d-e1-ft#https://d1pgqke3goo8l6.cloudfront.net/vr3GE0A4T72rPF3Sh5II_dys-bg-blue-clear.png');background-repeat:no-repeat">
@@ -330,4 +332,18 @@ def password_reset_confirmation(user_account):
     return f'''
     Hi {user_account.name} This is to confirm that your password had been reset successfully.
     '''
+
+
+def send_email(subject, message, recipient_list, text_message=''):
+    try:
+        send_mail(
+            subject=subject,
+            html_message=message,
+            recipient_list=recipient_list,
+            message=text_message if text_message != '' else message,
+            from_email='austineforall@gmail.com',
+        )
+        return True
+    except:
+        return False
 

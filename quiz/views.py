@@ -81,8 +81,8 @@ def search_public_quiz(request, value):
 
 @api_view(['GET'])
 def get_quiz_details(request, slug):
-    quiz = Quiz.objects.get(slug=slug).select_related('quiz')
-    serializer = GetAllQuizSerializer(quiz, many=False)
+    quiz = Quiz.objects.filter(slug=slug).prefetch_related('quizQuestions')
+    serializer = GetAllQuizSerializer(quiz, many=True)
     return Response({
         'code': Response.status_code,
         'description': 'Quiz detail',

@@ -33,7 +33,7 @@ class Quiz(models.Model):
 
 class Questions(models.Model):
     id = models.AutoField(primary_key=True)
-    quizId = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    quizId = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='quizQuestions')
     questionNo = models.IntegerField(null=False)
     question = models.TextField(blank=False, null=False)
     maxScore = models.IntegerField(null=False)

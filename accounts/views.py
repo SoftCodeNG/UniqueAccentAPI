@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import jwt
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
@@ -15,7 +16,7 @@ from accounts.serializers import RegistrationSerializer, StaffRegistrationSerial
 from services.checkToken import isAdmin
 from django.contrib.auth import get_user_model
 
-from services.sendEmail import send_reset_password_email, password_reset_confirmation
+from services.sendEmail import send_reset_password_email, password_reset_confirmation, send_email
 
 User = get_user_model()
 
@@ -158,34 +159,52 @@ def login_with_google(request):
 
 @api_view(['POST'])
 def forget_password(request):
-    user_account = UserAccount.objects.get(email__exact=request.data.get('email'))
+    try:
+        user_account = UserAccount.objects.get(email__exact=request.data.get('email'))
+    except:
+        return Response({
+            'description': "You've entered a wrong email address. Kindly check your email and try again.",
+            'payload': None
+        })
     token = RefreshToken.for_user(user_account)
 
-    send_mail(
-        'Password Reset Confirmation',
-        send_reset_password_email(token),
-        'austineforall@gmail.com',
-        [request.data.get('email')]
-    )
-    print(token)
+    try:
+        send_email(
+            'Password Reset Confirmation',
+            send_reset_password_email(token),
+            [request.data.get('email')],
+        )
+    except False:
+        return Response({
+            'description': f'''Hi {user_account.name}, 
+                We are sorry but we couldn't send the confirmation link at this time.
+                click on the Rest Password Button to continue''',
+            'payload': {
+                'resetLink': '/auth/reset-password/' + token
+            }
+        })
 
     return Response({
         'description': 'A resent link was sent to your email.',
-        'payload': 'A resent link was sent to your email.'
+        'payload': {
+            'success': 'A resent link was sent to your email.'
+        }
     })
 
 
 @api_view(['POST'])
 def reset_password(request):
-    user_account = UserAccount.objects.get(pk=request.data.get('userId'))
+    token_data = jwt.decode(jwt=request.data.get('token'), key='8e6cc7546ba343bcdf675dcdab3f33b9', algorithms=['HS256'])
+    print(token_data)
+    user_account = UserAccount.objects.get(pk=token_data['user_id'])
     user_account.password = make_password(request.data.get('password'))
     user_account.save()
 
     send_mail(
-        'Password Reset Confirmation',
+        'Password Reset Successful',
         password_reset_confirmation(user_account),
         'austineforall@gmail.com',
-        [request.data.get('email')]
+        [user_account.email]
     )
 
     return Response({

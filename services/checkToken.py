@@ -79,5 +79,3 @@ def isAdmin(view_func: object) -> object:
                 res.status_code = 401
                 return res
     return wrapper_func
-
-

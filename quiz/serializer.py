@@ -17,11 +17,20 @@ class CreateQuizSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class GetQuestionSerializer(ModelSerializer):
+
+    class Meta:
+        model = Questions
+        fields = '__all__'
+
+
 class GetAllQuizSerializer(ModelSerializer):
+    quizQuestions = GetQuestionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Quiz
-        fields = '__all__'
+        fields = ['id', 'title', 'slug', 'passCode', 'organisation', 'organisationLogo', 'instruction',
+                  'duration', 'startDate', 'endDate', 'question', 'quizQuestions', 'createdAt', 'updatedAt']
 
 
 class CreateQuestionSerializer(ModelSerializer):
@@ -34,9 +43,3 @@ class CreateQuestionSerializer(ModelSerializer):
         model = Questions
         fields = '__all__'
 
-
-class GetQuestionSerializer(ModelSerializer):
-
-    class Meta:
-        model = Questions
-        fields = '__all__'
