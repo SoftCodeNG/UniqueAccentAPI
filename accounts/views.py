@@ -200,12 +200,14 @@ def reset_password(request):
     user_account.password = make_password(request.data.get('password'))
     user_account.save()
 
-    send_mail(
-        'Password Reset Successful',
-        password_reset_confirmation(user_account),
-        'austineforall@gmail.com',
-        [user_account.email]
-    )
+    try:
+        send_email(
+            'Password Reset Successful',
+            password_reset_confirmation(user_account),
+            [user_account.email]
+        )
+    except False:
+        pass
 
     return Response({
         'description': 'Password reset was successful.',
