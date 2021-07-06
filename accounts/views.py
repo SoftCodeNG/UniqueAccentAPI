@@ -185,9 +185,9 @@ def forget_password(request):
         })
 
     return Response({
-        'description': 'A resent link was sent to your email.',
+        'description': 'A password resent link was sent to your email.',
         'payload': {
-            'success': 'A resent link was sent to your email.'
+            'success': 'A password resent link was sent to your email.'
         }
     })
 
