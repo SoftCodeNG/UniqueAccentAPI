@@ -15,7 +15,7 @@ from accounts.serializers import RegistrationSerializer, StaffRegistrationSerial
 from services.checkToken import isAdmin
 from django.contrib.auth import get_user_model
 
-from services.sendEmail import send_reset_password_email
+from services.sendEmail import send_reset_password_email, password_reset_confirmation
 
 User = get_user_model()
 
@@ -170,5 +170,25 @@ def forget_password(request):
     print(token)
 
     return Response({
-        'description': 'A resent link was sent to your email.'
+        'description': 'A resent link was sent to your email.',
+        'payload': 'A resent link was sent to your email.'
+    })
+
+
+@api_view(['POST'])
+def reset_password(request):
+    user_account = UserAccount.objects.get(pk=request.data.get('userId'))
+    user_account.password = make_password(request.data.get('password'))
+    user_account.save()
+
+    send_mail(
+        'Password Reset Confirmation',
+        password_reset_confirmation(user_account),
+        'austineforall@gmail.com',
+        [request.data.get('email')]
+    )
+
+    return Response({
+        'description': 'Password reset was successful.',
+        'payload': 'Password reset was successful.'
     })

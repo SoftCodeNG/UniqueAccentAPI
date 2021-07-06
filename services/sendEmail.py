@@ -324,3 +324,10 @@ def send_reset_password_email(token):
     
     <a href="https://uniqueaccent.com.ng/accounts/resetPassword/{token}">{token}</a> 
     '''
+
+
+def password_reset_confirmation(user_account):
+    return f'''
+    Hi {user_account.name} This is to confirm that your password had been reset successfully.
+    '''
+
