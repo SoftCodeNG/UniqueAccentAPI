@@ -3,23 +3,16 @@ from django.core.mail import send_mail
 from courses.models import Courses
 
 
-def registration_successful(user):
+def registration_successful_email(user):
     latest_course = Courses.objects.filter(isPublished=True).order_by('-createdAt')[:3]
     code_template = f'''
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bellota:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    <title>Unique Accent Email</title>
-</head>
-<body style="background: #d9d9d9; font-family: 'Bellota', cursive;">
-    <a href="https://uniqueaccent.com.ng/" style="display: grid; justify-content: center; padding: 20px">
+<body>
+    <div style="background: #d9d9d9; font-family: 'Roboto', sanserif; width: 100%">
+    <a href="https://uniqueaccent.com.ng/" style="display: block; text-align: center; padding: 20px">
         <img style="width: 15vw" src="https://uniqueaccent.com.ng/assets/UACLLogo.png" alt="Unique Accent" >
     </a>
     <hr>
-    <div style="font-size: 1.3em; display: grid; gap: 20px; padding: 40px">
+    <div style="font-size: 1.3em; line-height: 40px; padding: 40px">
         <div>Hi {user.name},</div>
         <div>Welcome to the Unique Family.</div>
         <div>We are delighted to inform you that you've completed your registration with <strong>Unique Accent Consultancy Limited</strong>.</div>
@@ -29,16 +22,16 @@ def registration_successful(user):
     </div>
     <div style="background: #FF6600; text-align: center">
         <h1 style="font-family: 'Philosopher', sans-serif;">Latest Courses</h1>
-        <div style="display: flex; justify-content: center; flex-wrap: wrap; padding: 10px; gap: 20px">
+        <div style="display: flex; padding: 10px">
         '''
     for course in latest_course:
-        code_template = code_template + f'''<div style="max-width: 300px; background: #f1f1f1; box-shadow: 0 0 10px #f1f1f1; border-radius: 10px; padding: 10px; text-align: center">
-                <img style="height: 150px; margin: auto; display: block" src="{course.thumbnail}" alt="courseimage">
+        code_template = code_template + f'''<div style="max-width: 250px; display: inline-block; margin: 20px; background: #f1f1f1; box-shadow: 0 0 10px #f1f1f1; border-radius: 10px; padding: 10px; text-align: center">
+                <img style="height: 150px; margin: auto" src="{course.thumbnail}" alt="courseimage">
                 <div class="coursedetails">
                     <h3 style="font-family: 'Philosopher', sans-serif;">{course.title}</h3>
-                    <p>{course.description}</p>
+                    <p>{course.description[:50]}</p>
                 </div>
-                <a href="https://uniqueaccent.com.ng/courses/{course.slug}" style="display: block; text-decoration: none; background: #FF6600; border: none; border-radius: 10px; padding: 10px; cursor: pointer; color: #f1f1f1">View Couurse</button>
+                <a href="https://uniqueaccent.com.ng/courses/{course.slug}" style="display: block; text-decoration: none; background: #FF6600; border: none; border-radius: 10px; padding: 10px; cursor: pointer; color: #f1f1f1">View Couurse</a>
             </div>'''
     code_template = code_template + '''
         </div>
@@ -68,7 +61,7 @@ def registration_successful(user):
         </a>
     </div>
 </footer>
-
+</div>
 </body>
 </html>
     '''

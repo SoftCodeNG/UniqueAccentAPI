@@ -17,7 +17,7 @@ from services.checkToken import isAdmin
 from django.contrib.auth import get_user_model
 
 from services.sendEmail import send_reset_password_email, password_reset_confirmation, send_email, \
-    registration_successful
+    registration_successful_email
 
 User = get_user_model()
 
@@ -28,12 +28,12 @@ def registration_view(request):
         request_serializer = RegistrationSerializer(data=request.data)
         data = {}
         if request_serializer.is_valid():
-            account = request_serializer.save()
+            user = request_serializer.save()
             try:
                 send_email(
                     'Password Reset Successful',
-                    registration_successful(account),
-                    [account.email]
+                    registration_successful_email(user),
+                    [user.email]
                 )
             except False:
                 pass
