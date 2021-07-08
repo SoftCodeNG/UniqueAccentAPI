@@ -29,7 +29,7 @@ def registration_successful_email(user):
                 <img style="height: 150px; margin: auto" src="{course.thumbnail}" alt="courseimage">
                 <div class="coursedetails">
                     <h3 style="font-family: 'Philosopher', sans-serif;">{course.title}</h3>
-                    <p>{course.description[:50]}</p>
+                    <p>{course.description[:150]}</p>
                 </div>
                 <a href="https://uniqueaccent.com.ng/courses/{course.slug}" style="display: block; text-decoration: none; background: #FF6600; border: none; border-radius: 10px; padding: 10px; cursor: pointer; color: #f1f1f1">View Couurse</a>
             </div>'''
