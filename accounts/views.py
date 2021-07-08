@@ -16,7 +16,8 @@ from accounts.serializers import RegistrationSerializer, StaffRegistrationSerial
 from services.checkToken import isAdmin
 from django.contrib.auth import get_user_model
 
-from services.sendEmail import send_reset_password_email, password_reset_confirmation, send_email
+from services.sendEmail import send_reset_password_email, password_reset_confirmation, send_email, \
+    registration_successful
 
 User = get_user_model()
 
@@ -28,27 +29,14 @@ def registration_view(request):
         data = {}
         if request_serializer.is_valid():
             account = request_serializer.save()
-            # r = requests.post('http://127.0.0.1:8000/auth/token/', json={'email': account.email, 'password': request.data['password']})
-            # if r.status_code == 200:
-            #     print('I am here')
-            #     send_mail(
-            #         'Thanks for Registering',
-            #         f'''
-            #             Hi {account.name},
-            #             I'm the creator of the BizPage. Our goal is to help you with optimization and increase your sales in Instagram. Thanks for registering with our service! We hope that your business will grow even faster.
-            #
-            #             Your email: {account.email}
-            #             Your password: ********* (Hidden)
-            #
-            #             Using BizPage is easy so have a happy sales.
-            #             ''',
-            #         'austineforall@gmail.com',
-            #         [account.email]
-            #         # False, None, None, None, True
-            #     )
-            #     return Response(r.json())
-            # else:
-            #     print(r)
+            try:
+                send_email(
+                    'Password Reset Successful',
+                    registration_successful(account),
+                    [account.email]
+                )
+            except False:
+                pass
             return Response(request_serializer.data)
         else:
             return Response(request_serializer.errors)
