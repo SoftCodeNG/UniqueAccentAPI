@@ -34,7 +34,6 @@ class GetAllQuizSerializer(ModelSerializer):
 
 
 class CreateQuestionSerializer(ModelSerializer):
-    quizId = serializers.IntegerField(required=True)
     questionNo = serializers.IntegerField(required=True)
     question = serializers.CharField(required=True)
     maxScore = serializers.IntegerField(required=True)

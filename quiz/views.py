@@ -96,7 +96,7 @@ def get_quiz_details(request, slug):
 def create_question(request):
     serializer = CreateQuestionSerializer(data=request.data)
     if serializer.is_valid():
-        quiz = Quiz.objects.get(slug=request.data['quizId'])
+        quiz = Quiz.objects.get(pk=request.data['quizId'])
         quiz.question = int(quiz.question) + 1
         quiz.save()
         serializer.save()
