@@ -23,3 +23,14 @@ class Service(models.Model):
             else:
                 self.slug = slugify(self.title)
         super(Service, self).save(*args, **kwargs)
+
+
+class Testimonial(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, blank=False, null=False)
+    title = models.SlugField(max_length=100)
+    avatar = models.CharField(max_length=500)
+    isTextTestimonial = models.BooleanField(default=True, null=False)
+    testimony = models.TextField(blank=False, null=False)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
