@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from media.models import Media
-from settings.models import Service
+from settings.models import Service, Testimonial
 
 
 class CreateServiceSerializer(ModelSerializer):
@@ -30,5 +30,12 @@ class CreateTestimonialSerializer(ModelSerializer):
     testimony = serializers.CharField(required=True)
 
     class Meta:
-        model = Service
+        model = Testimonial
+        fields = '__all__'
+
+
+class GetTestimonialSerializer(ModelSerializer):
+
+    class Meta:
+        model = Testimonial
         fields = '__all__'

@@ -3,8 +3,9 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from services.checkToken import authenticateToken, isAdmin
-from settings.models import Service
-from settings.serializers import CreateServiceSerializer, GetServiceSerializer, CreateTestimonialSerializer
+from settings.models import Service, Testimonial
+from settings.serializers import CreateServiceSerializer, GetServiceSerializer, CreateTestimonialSerializer, \
+    GetTestimonialSerializer
 
 
 @api_view(['POST'])
@@ -74,12 +75,22 @@ def create_testimonial(request):
     })
 
 
+@api_view(['GET'])
+def get_all_testimonials(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
+    testimonial = Testimonial.objects.all().order_by('-updatedAt')
+    testimonial = paginator.paginate_queryset(testimonial, request)
+    serializer = GetTestimonialSerializer(testimonial, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
+
 @api_view(['PUT'])
 # @authenticateToken
 # @isAdmin
 def update_testimonial(request, testimony_id):
-    service = Service.objects.get(pk=testimony_id)
-    serializer = CreateTestimonialSerializer(service, many=False, data=request.data)
+    testimonial = Testimonial.objects.get(id=testimony_id)
+    serializer = CreateTestimonialSerializer(testimonial, many=False, data=request.data)
     if serializer.is_valid():
         serializer.save()
     return Response({
@@ -93,11 +104,11 @@ def update_testimonial(request, testimony_id):
 # @authenticateToken
 # @isAdmin
 def delete_testimonial(request, testimony_id):
-    service = Service.objects.get(pk=testimony_id)
-    service.delete()
+    testimonial = Testimonial.objects.get(pk=testimony_id)
+    testimonial.delete()
 
     return Response({
         'code': Response.status_code,
-        'description': 'Service Deleted',
+        'description': 'Testimonial Deleted',
         'payload': None
     })
