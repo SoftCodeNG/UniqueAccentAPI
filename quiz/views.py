@@ -38,7 +38,14 @@ def update_quiz(request, slug):
 
 @api_view(['GET'])
 def confirm_passcode(request, passcode):
-    quiz = Quiz.objects.get(passCode=passcode)
+    try:
+        quiz = Quiz.objects.get(passCode=passcode)
+    except:
+        return Response({
+            'code': Response.status_code,
+            'description': 'Quiz detail',
+            'payload': None
+        })
     serializer = GetAllQuizSerializer(quiz)
     return Response({
         'code': Response.status_code,
