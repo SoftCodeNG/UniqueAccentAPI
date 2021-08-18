@@ -37,6 +37,17 @@ def update_quiz(request, slug):
 
 
 @api_view(['GET'])
+def confirm_passcode(request, passcode):
+    quiz = Quiz.objects.get(passCode=passcode)
+    serializer = GetAllQuizSerializer(quiz)
+    return Response({
+        'code': Response.status_code,
+        'description': 'Quiz detail',
+        'payload': serializer.data
+    })
+
+
+@api_view(['GET'])
 @authenticateToken
 @isStaff
 def get_quiz(request):
