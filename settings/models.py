@@ -34,3 +34,8 @@ class Testimonial(models.Model):
     testimony = models.TextField(blank=False, null=False)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
+
+
+class HomePageSlider(models.Model):
+    id = models.AutoField(primary_key=True)
+    image = models.CharField(max_length=500, null=False)

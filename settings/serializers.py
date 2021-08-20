@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from media.models import Media
-from settings.models import Service, Testimonial
+from settings.models import Service, Testimonial, HomePageSlider
 
 
 class CreateServiceSerializer(ModelSerializer):
@@ -38,4 +38,19 @@ class GetTestimonialSerializer(ModelSerializer):
 
     class Meta:
         model = Testimonial
+        fields = '__all__'
+
+
+class CreateHomePageSlider(ModelSerializer):
+    image = serializers.CharField(required=False)
+
+    class Meta:
+        model = HomePageSlider
+        fields = '__all__'
+
+
+class GetHomePageSlider(ModelSerializer):
+
+    class Meta:
+        model = HomePageSlider
         fields = '__all__'
