@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from quiz.models import Quiz, Questions
+from quiz.models import Quiz, Questions, Answers, CandidateData
 
 
 class CreateQuizSerializer(ModelSerializer):
@@ -42,3 +42,30 @@ class CreateQuestionSerializer(ModelSerializer):
         model = Questions
         fields = '__all__'
 
+
+class RegisterCandidateSerializer(ModelSerializer):
+    quizId = serializers.IntegerField(required=True)
+    candidateName = serializers.CharField(required=True)
+    candidateNumber = serializers.CharField(required=True)
+    passCode = serializers.CharField(required=True)
+
+    class Meta:
+        model = CandidateData
+        fields = '__all__'
+
+
+class GetAllCandidateForAQuizSerializer(ModelSerializer):
+
+    class Meta:
+        model = CandidateData
+        fields = '__all__'
+
+
+class PostAnswerSerializer(ModelSerializer):
+    questionsId = serializers.IntegerField(required=True)
+    candidateDataId = serializers.IntegerField(required=True)
+    answer = serializers.FileField(required=True)
+
+    class Meta:
+        model = Answers
+        fields = '__all__'

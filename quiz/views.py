@@ -2,8 +2,9 @@ from rest_framework.decorators import api_view
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from quiz.models import Quiz, Questions
-from quiz.serializer import CreateQuizSerializer, GetAllQuizSerializer, CreateQuestionSerializer, GetQuestionSerializer
+from quiz.models import Quiz, Questions, Answers, CandidateData
+from quiz.serializer import CreateQuizSerializer, GetAllQuizSerializer, CreateQuestionSerializer, GetQuestionSerializer, \
+    PostAnswerSerializer, RegisterCandidateSerializer, GetAllCandidateForAQuizSerializer
 from services.checkToken import authenticateToken, isAdmin, isStaff
 
 
@@ -161,4 +162,53 @@ def delete_question(request, question_id):
         'code': Response.status_code,
         'description': 'Question deleted successfully',
         'payload': 'Question deleted successfully'
+    })
+
+
+@api_view(['POST'])
+def register_candidate(request):
+    quiz = Quiz.objects.get(pk=request.data['quizId'])
+    serializer = RegisterCandidateSerializer(quiz, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response({
+        'code': Response.status_code,
+        'errors': serializer.errors,
+        'payload': serializer.data if len(serializer.errors) == 0 else None
+    })
+
+
+@api_view(['POST'])
+def post_answer(request):
+    question_id = Quiz.objects.get(pk=request.data['questionsId'])
+    candidate_data_id = Quiz.objects.get(pk=request.data['candidateDataId'])
+    serializer = PostAnswerSerializer(question_id, candidate_data_id, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response({
+        'code': Response.status_code,
+        'errors': serializer.errors,
+        'payload': serializer.data if len(serializer.errors) == 0 else None
+    })
+
+
+@api_view(['GET'])
+def get_question_answers(request, question_id):
+    answers = Answers.objects.get(questionsId=question_id)
+    serializer = GetQuestionSerializer(answers, many=True)
+    return Response({
+        'code': Response.status_code,
+        'description': 'Question answers',
+        'payload': serializer.data
+    })
+
+
+@api_view(['GET'])
+def get_all_candidates_for_a_quiz(request, quiz_id):
+    candidates = CandidateData.objects.get(quizId=quiz_id)
+    serializer = GetAllCandidateForAQuizSerializer(candidates, many=True)
+    return Response({
+        'code': Response.status_code,
+        'description': 'All Candidates for a quiz',
+        'payload': serializer.data
     })

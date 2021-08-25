@@ -1,7 +1,8 @@
 from django.urls import path
 
 from quiz.views import create_quiz, update_quiz, get_quiz, get_public_quiz, search_quiz, search_public_quiz, \
-    get_quiz_details, create_question, update_question, get_question_detail, delete_question, confirm_passcode
+    get_quiz_details, create_question, update_question, get_question_detail, delete_question, confirm_passcode, \
+    register_candidate, post_answer
 
 urlpatterns = [
     path('createQuiz', create_quiz, name='createQuiz'),
@@ -16,4 +17,6 @@ urlpatterns = [
     path('updateQuestion/<int:quiz_id>', update_question, name='updateQuestion'),
     path('getQuestionDetail/<int:question_id>', get_question_detail, name='getQuestionDetail'),
     path('deleteQuestion/<int:question_id>', delete_question, name='deleteQuestion'),
+    path('registerCandidate', register_candidate, name='registerCandidate'),
+    path('postAnswer', post_answer, name='postAnswer'),
 ]

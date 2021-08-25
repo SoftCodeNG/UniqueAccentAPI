@@ -33,9 +33,28 @@ class Quiz(models.Model):
 
 class Questions(models.Model):
     id = models.AutoField(primary_key=True)
-    quizId = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='quizQuestions')
+    quizId = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     questionNo = models.IntegerField(null=False)
     question = models.TextField(blank=False, null=False)
     maxScore = models.IntegerField(null=False)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
+
+
+class CandidateData(models.Model):
+    id = models.AutoField(primary_key=True)
+    quizId = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    candidateName = models.TextField(null=False)
+    candidateNumber = models.TextField(null=False)
+    passCode = models.FileField(null=False)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
+
+
+class Answers(models.Model):
+    id = models.AutoField(primary_key=True)
+    questionsId = models.ForeignKey(Questions, on_delete=models.CASCADE)
+    candidateDataId = models.ForeignKey(CandidateData, on_delete=models.CASCADE)
+    answer = models.FileField(null=False)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
