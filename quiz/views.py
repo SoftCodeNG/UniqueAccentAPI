@@ -212,3 +212,5 @@ def get_all_candidates_for_a_quiz(request, quiz_id):
         'description': 'All Candidates for a quiz',
         'payload': serializer.data
     })
+
+
